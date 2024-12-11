@@ -1,1 +1,10 @@
 GET http://localhost:3000/places?text=rua campeche, cianorte, 120
+
+###
+GET http://localhost:3000/places?text=rua padre vieira, maringa
+
+###
+@originId = EjJSLiBDYW1wZWNoZSwgMTIwIC0gQ2lhbm9ydGUsIFBSLCA4NzIwMC0wMDAsIEJyYXNpbCIwEi4KFAoSCUVZPo9QV-2UEab-uUUvM9W8EHgqFAoSCUVZPo9QV-2UEUZrkEO5UXPl
+@destinationId = ChIJcZbLvNvW7JQRkBuYXujrav8
+###
+GET http://localhost:3000/directions?originId={{ originId }}&destinationId={{ destinationId }}
