@@ -8,3 +8,19 @@ GET http://localhost:3000/places?text=rua padre vieira, maringa
 @destinationId = ChIJcZbLvNvW7JQRkBuYXujrav8
 ###
 GET http://localhost:3000/directions?originId={{ originId }}&destinationId={{ destinationId }}
+
+###
+POST http://localhost:3000/routes
+Content-Type: application/json
+
+{
+  "source_id": "{{ originId }}",
+  "destination_id": "{{ destinationId }}",
+  "name": "Cianorte X Maringa"
+}
+
+###
+GET http://localhost:3000/routes
+
+###
+GET http://localhost:3000/routes/675a12953f04511594ed1b87

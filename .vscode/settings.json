@@ -16,5 +16,9 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "html.format.indentInnerHtml": true,
   "editor.wordWrapColumn": 80,
-  "editor.rulers": [80, 120]
+  "editor.rulers": [80, 120],
+  "prettier.endOfLine": "lf",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }

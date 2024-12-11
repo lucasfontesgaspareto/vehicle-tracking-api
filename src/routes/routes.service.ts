@@ -1,29 +1,64 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRouteDto } from './dto/create-route.dto';
-import { UpdateRouteDto } from './dto/update-route.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { DirectionsService } from 'src/maps/directions/directions.service';
 
 @Injectable()
 export class RoutesService {
-  constructor(private readonly prismaClient: PrismaService) {}
+  constructor(
+    private readonly prismaClient: PrismaService,
+    private readonly directionsService: DirectionsService,
+  ) {}
 
-  create(createRouteDto: CreateRouteDto) {
-    return 'This action adds a new route';
+  async create(createRouteDto: CreateRouteDto) {
+    const { available_travel_modes, geocoded_waypoints, routes, request } =
+      await this.directionsService.getDirections(
+        createRouteDto.source_id,
+        createRouteDto.destination_id,
+      );
+
+    const legs = routes[0].legs[0];
+
+    return this.prismaClient.route.create({
+      data: {
+        name: createRouteDto.name,
+        source: {
+          name: legs.start_address,
+          location: {
+            lat: legs.start_location.lat,
+            lng: legs.start_location.lng,
+          },
+        },
+        destination: {
+          name: legs.start_address,
+          location: {
+            lat: legs.end_location.lat,
+            lng: legs.end_location.lng,
+          },
+        },
+        distance: legs.distance.value,
+        duration: legs.duration.value,
+        directions: JSON.parse(
+          JSON.stringify({
+            available_travel_modes,
+            geocoded_waypoints,
+            routes,
+            request,
+          }),
+        ),
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all routes`;
+    return this.prismaClient.route.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} route`;
-  }
-
-  update(id: number, updateRouteDto: UpdateRouteDto) {
-    return `This action updates a #${id} route`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} route`;
+  findOne(id: string) {
+    return this.prismaClient.route.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    });
   }
 }
